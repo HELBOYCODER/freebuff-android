@@ -1,0 +1,61 @@
+{
+  "project": "freebuff-android",
+  "spec": "FREEBUFF_ANDROID_MASTER_AGENT_PROMPT.md",
+  "protocol": "GodPrompt / superpowers TDD",
+  "updated": "2026-09-28",
+  "upstream": {
+    "repo": "https://github.com/CodebuffAI/freebuff",
+    "commit": "25f1d61530c6d58db394b59db12e97c113e9322d",
+    "commit_date": "2026-09-27",
+    "canonical_tool_count": 37,
+    "client_tool_count": 16
+  },
+  "current_phase": "phase-0-recon-complete",
+  "environment": {
+    "os": "macOS 14.8.9 arm64",
+    "node": "v26.9.0",
+    "npm": "available",
+    "java": "MISSING",
+    "gradle": "MISSING",
+    "android_sdk": "MISSING",
+    "bun": "not on PATH",
+    "git": "2.39.5",
+    "gh": "2.101.0"
+  },
+  "build_status": {
+    "android_compile": "BLOCKED — no JDK/Android SDK on this machine; cannot assembleDebug/assembleRelease here",
+    "android_instrumentation": "BLOCKED — no emulator/device + no SDK",
+    "protocol_reference_node": "IN PROGRESS"
+  },
+  "completed_capabilities": [
+    "upstream audit against pinned commit",
+    "canonical tool surface extraction (37 tools + 4 composio)",
+    "clientToolCallSchema host contract (16 tools)",
+    "session-state / FileChangeSchema contract capture",
+    "run_terminal_command timeout semantics capture",
+    "UPSTREAM_COMPATIBILITY.md with spec-vs-upstream divergences"
+  ],
+  "failing_tests": [],
+  "known_defects": [],
+  "unresolved_compatibility_gaps": [
+    "cloud_plan_ready / lookup_agent_info / report_project_profile absent from spec §6 (present upstream)",
+    "spawn_agent_inline published upstream? NO (commented out) — must not advertise",
+    "gravity_index backend availability on Android unproven"
+  ],
+  "security_issues": [],
+  "verification_evidence": {
+    "upstream_clone": "success (shallow) @ /tmp/freebuff_probe",
+    "commit_pinned": true,
+    "files_read": [
+      "common/src/tools/constants.ts",
+      "common/src/tools/list.ts",
+      "common/src/types/session-state.ts",
+      "common/src/tools/params/tool/run-terminal-command.ts",
+      "common/src/actions.ts"
+    ]
+  },
+  "gates_requiring_user_decision": [
+    "Provision JDK + Android SDK + Gradle (~5GB, admin, network) to enable local compile/instrumentation verification, OR proceed source-only and defer Android build verification to CI"
+  ],
+  "definition_of_done_status": "NOT MET — most capabilities unimplemented and Android build not verifiable in current environment. Must not be reported as production-ready."
+}
