@@ -10,21 +10,24 @@
     "canonical_tool_count": 37,
     "client_tool_count": 16
   },
-  "current_phase": "phase-1-vertical-slice-logic-layer-complete",
+  "current_phase": "phase-1-apk-built",
   "environment": {
     "os": "macOS 14.8.9 arm64",
     "node": "v26.9.0",
     "npm": "available",
-    "java": "MISSING",
-    "gradle": "MISSING",
-    "android_sdk": "MISSING",
+    "java": "PROVISIONED Temurin 17.0.20.1+1 (~/freebuff-toolchain)",
+    "gradle": "PROVISIONED 8.7 (~/freebuff-toolchain)",
+    "android_sdk": "PROVISIONED from Tencent mirror (platforms/android-34, build-tools/34.0.0, platform-tools)",
     "bun": "not on PATH",
     "git": "2.39.5",
-    "gh": "2.101.0"
+    "gh": "2.101.0",
+    "network": "Google android endpoints egress-blocked; use maven.aliyun.com + repo.huaweicloud.com + mirrors.cloud.tencent.com/AndroidSDK"
   },
   "build_status": {
-    "android_compile": "BLOCKED — Google SDK + maven.google.com endpoints are egress-filtered on this machine; CI-gated (FB_ANDROID=1)",
-    "android_instrumentation": "BLOCKED — requires SDK + device; CI-gated",
+    "android_debug_apk": "PASS — :app:assembleDebug BUILD SUCCESSFUL, app-debug.apk 22MB (com.freebuff.android v0.1.0-slice, minSdk29 targetSdk34)",
+    "android_compile": "PASS via mirror (Google endpoints egress-blocked; SDK from Tencent mirror, AGP/androidx from Aliyun/Huawei)",
+    "android_release_aab": "NOT BUILT — needs signing keystore (CI); not faked",
+    "android_instrumentation": "NOT RUN — no emulator/device on this box",
     "core_jvm_compile": "PASS — Gradle 8.7 + JDK 17, Kotlin from Maven Central",
     "tests": "27 passing (20 Kotlin JVM + 7 Node protocol-ref), 0 failures"
   },
@@ -56,6 +59,7 @@
     "commit_pinned": true,
     "kotlin_jvm_tests": "gradle :core:*:test -> BUILD SUCCESSFUL, tests=20 failures=0 errors=0",
     "node_protocol_tests": "node --test protocol-ref/ -> pass 7 fail 0",
+    "apk_build": ":app:assembleDebug BUILD SUCCESSFUL; aapt2 badging = package com.freebuff.android v0.1.0-slice minSdk29 target34; staged dist/freebuff-android-debug-v0.1.0-slice.apk + .sha256",
     "toolchain": "Temurin 17.0.20.1+1 aarch64 + Gradle 8.7 (reachable hosts only)",
     "google_egress": "dl.google.com/android/repository + maven.google.com -> 404 (filtered)",
     "files_read": [

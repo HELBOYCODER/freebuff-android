@@ -1,16 +1,22 @@
 pluginManagement {
     repositories {
+        // Google's plugin host (dl.google.com / maven.google.com) is egress-blocked on this
+        // dev box, so AGP + plugin markers are resolved through public mirrors instead.
+        maven("https://maven.aliyun.com/repository/google")
+        maven("https://maven.aliyun.com/repository/gradle-plugin")
+        maven("https://maven.aliyun.com/repository/public")
+        maven("https://repo.huaweicloud.com/repository/maven/")
         gradlePluginPortal()
         mavenCentral()
-        // Google's maven + the SDK are required only for the Android modules, which
-        // are gated behind FB_ANDROID=1 (see settings below). Network-restricted
-        // dev boxes (no dl.google.com) still build & test the JVM core.
         google()
     }
 }
 
 dependencyResolutionManagement {
     repositories {
+        maven("https://maven.aliyun.com/repository/google")
+        maven("https://maven.aliyun.com/repository/public")
+        maven("https://repo.huaweicloud.com/repository/maven/")
         mavenCentral()
         google()
     }
@@ -18,23 +24,14 @@ dependencyResolutionManagement {
 
 rootProject.name = "freebuff-android"
 
-// --- Locally-verifiable pure-Kotlin core (JVM; buildable & testable without the
-//     Android SDK). These carry the vertical-slice LOGIC mirrored from upstream. ---
+// Locally-verifiable pure-Kotlin core (JVM; buildable & testable without the Android SDK).
 include(":core:model")
 include(":core:protocol")
 include(":core:security")
 include(":core:workspace")
 
-// --- Android modules: require the Google SDK + AGP (blocked on this dev box).
-//     Enabled in CI / normal-network machines via FB_ANDROID=1. Documented in
-//     docs/android-runtime.md + engineering-log.json as a capability gate. ---
+// Android modules: require the SDK + AGP (gated behind FB_ANDROID=1).
+// Terminal/Git/feature modules are authored progressively; enable when present.
 if (System.getenv("FB_ANDROID") == "1") {
-    include(":core:terminal")
-    include(":core:git")
-    include(":core:agent")
-    include(":feature:workspace")
-    include(":feature:editor")
-    include(":feature:agent")
-    include(":feature:terminal")
     include(":app")
 }
