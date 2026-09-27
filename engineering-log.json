@@ -10,7 +10,7 @@
     "canonical_tool_count": 37,
     "client_tool_count": 16
   },
-  "current_phase": "phase-0-recon-complete",
+  "current_phase": "phase-1-vertical-slice-logic-layer-complete",
   "environment": {
     "os": "macOS 14.8.9 arm64",
     "node": "v26.9.0",
@@ -23,9 +23,10 @@
     "gh": "2.101.0"
   },
   "build_status": {
-    "android_compile": "BLOCKED — no JDK/Android SDK on this machine; cannot assembleDebug/assembleRelease here",
-    "android_instrumentation": "BLOCKED — no emulator/device + no SDK",
-    "protocol_reference_node": "IN PROGRESS"
+    "android_compile": "BLOCKED — Google SDK + maven.google.com endpoints are egress-filtered on this machine; CI-gated (FB_ANDROID=1)",
+    "android_instrumentation": "BLOCKED — requires SDK + device; CI-gated",
+    "core_jvm_compile": "PASS — Gradle 8.7 + JDK 17, Kotlin from Maven Central",
+    "tests": "27 passing (20 Kotlin JVM + 7 Node protocol-ref), 0 failures"
   },
   "completed_capabilities": [
     "upstream audit against pinned commit",
@@ -33,7 +34,14 @@
     "clientToolCallSchema host contract (16 tools)",
     "session-state / FileChangeSchema contract capture",
     "run_terminal_command timeout semantics capture",
-    "UPSTREAM_COMPATIBILITY.md with spec-vs-upstream divergences"
+    "UPSTREAM_COMPATIBILITY.md with spec-vs-upstream divergences",
+    "provisioned JDK17 + Gradle8.7 (user-dir, no admin)",
+    "Gradle multi-module JVM core scaffold + wrapper",
+    "core:model FileChange/ClientToolName(16)/TerminalTimeout mirrors",
+    "core:security PathSafety (traversal/abs reject) + EnvRedaction (subprocess scrub + log redact)",
+    "core:protocol ClientToolCallValidator (unknown-tool loud fail)",
+    "core:workspace StrReplace (explicit failure states)",
+    "CI workflow + docs/android-runtime.md capability gate"
   ],
   "failing_tests": [],
   "known_defects": [],
@@ -46,6 +54,10 @@
   "verification_evidence": {
     "upstream_clone": "success (shallow) @ /tmp/freebuff_probe",
     "commit_pinned": true,
+    "kotlin_jvm_tests": "gradle :core:*:test -> BUILD SUCCESSFUL, tests=20 failures=0 errors=0",
+    "node_protocol_tests": "node --test protocol-ref/ -> pass 7 fail 0",
+    "toolchain": "Temurin 17.0.20.1+1 aarch64 + Gradle 8.7 (reachable hosts only)",
+    "google_egress": "dl.google.com/android/repository + maven.google.com -> 404 (filtered)",
     "files_read": [
       "common/src/tools/constants.ts",
       "common/src/tools/list.ts",

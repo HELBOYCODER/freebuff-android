@@ -1,0 +1,32 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  core-jvm:
+    name: Core JVM contracts + security + protocol (no Android SDK required)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "17" }
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Run core tests (TDD gate)
+        run: ./gradlew --no-daemon :core:model:test :core:protocol:test :core:security:test :core:workspace:test
+      - name: Protocol reference tests (Node)
+        run: node --test protocol-ref/
+
+  android:
+    name: Android assembleDebug/instrumentation (requires full module set)
+    runs-on: ubuntu-latest
+    # Enable once :app + android feature/core modules are authored.
+    if: github.event_name == 'push' && false
+    env: { FB_ANDROID: "1" }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "17" }
+      - uses: android-actions/setup-android@v3
+      - run: ./gradlew --no-daemon :app:assembleDebug :app:assembleReleaseAndroidTest
