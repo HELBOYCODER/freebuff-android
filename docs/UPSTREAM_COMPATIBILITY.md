@@ -99,6 +99,34 @@ contract (`common/src/types/session-state.ts`) carries `messageHistory`, `subage
 See `docs/agent-protocol.md` for the full enumerated action set and `protocol-ref/` for an executable,
 Node-runnable reference validator of `clientToolCallSchema`.
 
+## Live backend contract (verified against the real server, 2026-09-28)
+
+Source of truth: `cli/src/utils/freebuff-session-api.ts`, `common/src/constants/freebuff-models.ts`,
+`sdk/src/impl/*` at `25f1d61`. Reimplemented in `:core:network`.
+
+| Item | Upstream value | Android mirror |
+|---|---|---|
+| Base URL | `NEXT_PUBLIC_CODEBUFF_APP_URL` ‖ `https://codebuff.com` | `FreebuffProtocol.DEFAULT_BASE_URL` |
+| Session status | `GET /api/v1/freebuff/session` → `{status}` | `FreebuffClient.sessionStatus()` |
+| Session admission | `POST /api/v1/freebuff/session/admission` | `FreebuffClient.admitSession()` |
+| Session reuse | `/api/v1/freebuff/session/reuse` | `SESSION_REUSE_PATH` |
+| Agent turn | `POST /api/v1/chat/completions`, **SSE** stream | `FreebuffClient.streamChat()` + `SseParser` |
+| Identity probe | `GET /api/v1/me` | `FreebuffClient.whoami()` |
+| Auth | `Authorization: Bearer <api key>` | same; Keystore-stored, never logged |
+| Wire headers | `x-freebuff-instance-id`, `x-freebuff-reuse-instance-id`, `x-freebuff-model`, `x-freebuff-wallet-spend-limit`, `x-freebuff-takeover-instance-id`, `x-freebuff-heartbeat`, `x-freebuff-compact-session` | `FreebuffProtocol.*_HEADER` |
+| Session timeout | 20 000 ms | `SESSION_TIMEOUT_MS` |
+
+**Retry-safety asymmetry preserved (upstream `classifyFreebuffSessionRequestFailure`)**: an
+admission `POST` that returns no response may already have rotated the active instance, so it is
+retried **only** on 408/429/503; other 4xx stop; 5xx-with-response is *unknown* (not blind-retried).
+`GET` retries 408/429/5xx. Ported verbatim and covered by `RetryPolicyTest`.
+
+**Live reachability evidence** (unauthenticated probes, no credentials used):
+`GET /api/v1/freebuff/session` → `401 {"error":"unauthorized","message":"Missing or invalid Authorization header"}`;
+`GET /api/v1/me` → `401`; `GET /api/v1/chat/completions` → `405`; `POST /api/v1/chat/completions` → `401`.
+The Android client's error→state mapping (`RetryPolicy.stateFor`) matches these documented shapes.
+Freebuff's built-in models are free/ad-supported, so the app needs no paid key for the hosted path.
+
 ## Unavoidable Android-specific implementations (to be kept current)
 | Area | Android approach | Upstream equivalent | Risk |
 |---|---|---|---|

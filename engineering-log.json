@@ -10,7 +10,7 @@
     "canonical_tool_count": 37,
     "client_tool_count": 16
   },
-  "current_phase": "phase-1-apk-built",
+  "current_phase": "phase-2-live-backend-connected",
   "environment": {
     "os": "macOS 14.8.9 arm64",
     "node": "v26.9.0",
@@ -29,7 +29,7 @@
     "android_release_aab": "NOT BUILT — needs signing keystore (CI); not faked",
     "android_instrumentation": "NOT RUN — no emulator/device on this box",
     "core_jvm_compile": "PASS — Gradle 8.7 + JDK 17, Kotlin from Maven Central",
-    "tests": "27 passing (20 Kotlin JVM + 7 Node protocol-ref), 0 failures"
+    "tests": "46 passing (39 Kotlin JVM + 7 Node protocol-ref), 0 failures"
   },
   "completed_capabilities": [
     "upstream audit against pinned commit",
@@ -44,7 +44,13 @@
     "core:security PathSafety (traversal/abs reject) + EnvRedaction (subprocess scrub + log redact)",
     "core:protocol ClientToolCallValidator (unknown-tool loud fail)",
     "core:workspace StrReplace (explicit failure states)",
-    "CI workflow + docs/android-runtime.md capability gate"
+    "CI workflow + docs/android-runtime.md capability gate",
+    "core:network real Freebuff client (session/me/chat SSE) mirroring upstream wire contract",
+    "RetryPolicy port incl. POST-admission non-idempotency asymmetry",
+    "SseParser (data/event/multi-line/keep-alive/[DONE])",
+    "Keystore-backed SecretStore (EncryptedSharedPreferences) + redacted summary",
+    "AgentViewModel: live connect probe + streamed turn + tool-call surfacing with explicit states",
+    "live endpoint contract verified by unauthenticated probes (401/405 documented)"
   ],
   "failing_tests": [],
   "known_defects": [],

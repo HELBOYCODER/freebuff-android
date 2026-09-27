@@ -29,6 +29,7 @@ include(":core:model")
 include(":core:protocol")
 include(":core:security")
 include(":core:workspace")
+include(":core:network")
 
 // Android modules: require the SDK + AGP (gated behind FB_ANDROID=1).
 // Terminal/Git/feature modules are authored progressively; enable when present.
