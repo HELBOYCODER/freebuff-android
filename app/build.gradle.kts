@@ -11,8 +11,8 @@ android {
         applicationId = "com.freebuff.android"
         minSdk = 29
         targetSdk = 34
-        versionCode = 2
-        versionName = "0.2.0-connected"
+        versionCode = 3
+        versionName = "0.3.0-saf-workspace"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -48,6 +48,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
     // Keystore-backed secret storage (Master Spec S14: provider secrets never in plain prefs).
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
+    implementation("androidx.documentfile:documentfile:1.0.1")
 
     implementation(project(":core:model"))
     implementation(project(":core:protocol"))

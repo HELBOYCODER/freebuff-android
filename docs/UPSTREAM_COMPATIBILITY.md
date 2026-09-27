@@ -78,6 +78,22 @@ Android host (everything else runs in the server/runtime): `apply_patch`, `ask_u
 
 `FileChangeSchema` (`common/src/actions.ts`): `{ type: 'patch' | 'file', path: string, content: string }`.
 
+### Nuance found while implementing the host executor (2026-09-28)
+`read_files` appears in the Master Spec §6 parity matrix and in `toolNames`, but it is **not** a member
+of `clientToolCallSchema`. The host never receives a `read_files` *tool call*; instead the server emits
+a `read-files-response` **ClientAction** (`common/src/actions.ts`: `{type:'read-files-response', files, requestId}`)
+and the host supplies contents. The Android host therefore answers reads through
+`HostToolExecutor.readFilesForAgent(...)`, and an invariant test asserts `read_files` is absent from
+the client tool enum so upstream drift here fails loudly.
+
+Tool-*param* shapes (what the model emits) also differ from the *client* shapes delivered to the host;
+both are honored:
+- `str_replace` params: `{path, replacements: [{oldString, newString, allowMultiple?}]}` (host receives a
+  `FileChangeSchema`).
+- `apply_patch` params: `{operation: {type: create_file|update_file|delete_file, path, diff}}` with
+  Codex-style unified diff; result `{message, applied:[{file, action: add|update|delete}]}` or `{errorMessage}`.
+- `run_terminal_command.timeout_seconds` clamped to `MAX=600s`, `-1` indefinite, `<=0` → `30`.
+
 ### Spec-vs-upstream divergences (must be reconciled in the Android build)
 1. **Tools in upstream but missing from spec §6**: `cloud_plan_ready`, `lookup_agent_info`,
    `report_project_profile`. Android must recognize and render these — never silently drop (§26).

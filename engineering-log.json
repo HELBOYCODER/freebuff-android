@@ -10,7 +10,7 @@
     "canonical_tool_count": 37,
     "client_tool_count": 16
   },
-  "current_phase": "phase-2-live-backend-connected",
+  "current_phase": "phase-2b-saf-workspace",
   "environment": {
     "os": "macOS 14.8.9 arm64",
     "node": "v26.9.0",
@@ -24,12 +24,12 @@
     "network": "Google android endpoints egress-blocked; use maven.aliyun.com + repo.huaweicloud.com + mirrors.cloud.tencent.com/AndroidSDK"
   },
   "build_status": {
-    "android_debug_apk": "PASS — :app:assembleDebug BUILD SUCCESSFUL, app-debug.apk 22MB (com.freebuff.android v0.1.0-slice, minSdk29 targetSdk34)",
+    "android_debug_apk": "PASS — v0.3.0-saf-workspace (versionCode 3), sha256 d3cdad69…, staged in dist/",
     "android_compile": "PASS via mirror (Google endpoints egress-blocked; SDK from Tencent mirror, AGP/androidx from Aliyun/Huawei)",
     "android_release_aab": "NOT BUILT — needs signing keystore (CI); not faked",
     "android_instrumentation": "NOT RUN — no emulator/device on this box",
     "core_jvm_compile": "PASS — Gradle 8.7 + JDK 17, Kotlin from Maven Central",
-    "tests": "46 passing (39 Kotlin JVM + 7 Node protocol-ref), 0 failures"
+    "tests": "87 passing (80 Kotlin JVM + 7 Node protocol-ref), 0 failures"
   },
   "completed_capabilities": [
     "upstream audit against pinned commit",
@@ -50,14 +50,24 @@
     "SseParser (data/event/multi-line/keep-alive/[DONE])",
     "Keystore-backed SecretStore (EncryptedSharedPreferences) + redacted summary",
     "AgentViewModel: live connect probe + streamed turn + tool-call surfacing with explicit states",
-    "live endpoint contract verified by unauthenticated probes (401/405 documented)"
+    "live endpoint contract verified by unauthenticated probes (401/405 documented)",
+    "WorkspaceFileSystem contract + LocalWorkspaceFileSystem (JVM, traversal-guarded)",
+    "HostToolExecutor: write_file/str_replace(FileChange)/apply_patch/glob/code_search/list_directory",
+    "read_files nuance: host answers read-files-response (invariant test)",
+    "UnifiedDiff + ApplyPatch with round-trip regression tests",
+    "IgnoreRules (.codebuffignore-style) + FileTreeBuilder caps + hidden toggle",
+    "EditSession dirty state + revert + diff",
+    "SAF adapter over DocumentFile with persistable URI permission",
+    "Workspace UI: open project -> tree -> editor -> save -> diff review"
   ],
   "failing_tests": [],
   "known_defects": [],
   "unresolved_compatibility_gaps": [
     "cloud_plan_ready / lookup_agent_info / report_project_profile absent from spec §6 (present upstream)",
     "spawn_agent_inline published upstream? NO (commented out) — must not advertise",
-    "gravity_index backend availability on Android unproven"
+    "gravity_index backend availability on Android unproven",
+    "SAF adapter runtime behaviour not device-verified (no emulator/device on this box); compile + JVM-side contract verified",
+    "terminal/Git/WebView/image/live agent-turn e2e still unimplemented"
   ],
   "security_issues": [],
   "verification_evidence": {

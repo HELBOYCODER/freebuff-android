@@ -20,7 +20,8 @@ and upstream-disabled `spawn_agent_inline`) live in
 :core:model       FileChange, the 16 ClientToolName, terminal-timeout clamp  (JVM, tested)
 :core:protocol    ClientToolCallValidator — unknown tool fails loudly          (JVM, tested)
 :core:security    PathSafety (traversal guard) + EnvRedaction (secret scrub)   (JVM, tested)
-:core:workspace   StrReplace edit engine with explicit failure states          (JVM, tested)
+:core:workspace   Unified diff, apply_patch (create/update/delete), str_replace
+                  multi-replacement, ignore rules + tree caps, dirty-state     (JVM, tested)
 :app              Compose + Material3 vertical-slice shell                     (Android)
 protocol-ref/     Dependency-free Node reference of the host contract          (Node, tested)
 ```
